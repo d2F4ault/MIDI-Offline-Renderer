@@ -1,0 +1,44 @@
+name: Repository Schedule Keepalive
+
+on:
+  schedule:
+    # Runs weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check repository activity and maintain schedule
+        run: |
+          LAST_COMMIT_TIME=$(git log -1 --format=%ct)
+          CURRENT_TIME=$(date +%s)
+          DIFF_DAYS=$(( (CURRENT_TIME - LAST_COMMIT_TIME) / 86400 ))
+          echo "Days since last commit: $DIFF_DAYS"
+
+          # If no commit in the last 45 days, update keepalive timestamp to prevent GitHub 60-day auto-disable
+          if [ "$DIFF_DAYS" -ge 45 ]; then
+            echo "Repository approaching 60-day scheduled workflow auto-disable window."
+            mkdir -p .github
+            date -u +"%Y-%m-%dT%H:%M:%SZ" > .github/keepalive.txt
+            
+            git config --local user.name "github-actions[bot]"
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git add .github/keepalive.txt
+            git commit -m "chore(keepalive): refresh schedule heartbeat [skip ci]"
+            
+            BRANCH="${GITHUB_REF_NAME:-main}"
+            git push origin "$BRANCH"
+            echo "Pushed keepalive heartbeat commit."
+          else
+            echo "Repository has recent activity ($DIFF_DAYS days ago). No action required."
+          fi

@@ -1,0 +1,31 @@
+# ==============================================================================
+# PianoFall Default Configuration
+# ==============================================================================
+
+# Video Display and Canvas Resolution
+viewport:
+  width: 1920
+  height: 1200
+  xvfb_display: ":99"
+
+# Rendering and Timing
+timing:
+  capture_fps: 30       # Real-time capture rate from virtual display
+  output_fps: 60        # Mastered output video framerate
+  start_delay_seconds: 2.5
+
+# Encoding & Mastering (Pure-CPU libx264)
+encoding:
+  capture_preset: "ultrafast"
+  capture_crf: 17
+  render_preset: "fast"
+  render_crf: 18
+  pixel_format: "yuv420p"
+  max_bitrate: "10M"
+  buffer_size: "20M"
+
+# Batching & Quotas
+pipeline:
+  max_videos_per_run: 1
+  max_piece_duration_seconds: 360.0
+  max_job_seconds: 7200.0
