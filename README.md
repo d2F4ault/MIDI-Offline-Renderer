@@ -133,45 +133,6 @@ PianoFall can be customized via YAML configuration or environment variables:
 
 ---
 
-## 🛠️ GitHub Repository Setup Guide
-
-To deploy PianoFall on GitHub Actions:
-
-### Step 1: Create a New GitHub Repository
-1. Navigate to [github.com/new](https://github.com/new).
-2. Choose a repository name (e.g. `pianofall` or `keys-visualizer`).
-3. Set the repository visibility to **Public** (public repositories have free unlimited GitHub Actions standard runners).
-
-### Step 2: Push Code to GitHub
-```bash
-git init
-git add .
-git commit -m "feat: initial commit of PianoFall rendering pipeline"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-git push -u origin main
-```
-
-### Step 3: Configure Workflow Permissions
-To allow the automated bot to commit finished videos and ledgers back to the repository:
-1. In your GitHub repository, open **Settings** → **Actions** → **General**.
-2. Scroll down to **Workflow permissions**.
-3. Select **Read and write permissions**.
-4. Check **Allow GitHub Actions to create and approve pull requests**.
-5. Click **Save**.
-
-### Step 4: Add Your MIDI Files
-- Simply drop `.mid` or `.midi` files into the `midis/` directory and commit them.
-- A sample classical piece (`Handel_HWV425.mid`) is already provided, so the pipeline is ready to run immediately.
-
-### Step 5: Manual Trigger
-1. Go to the **Actions** tab in your repository.
-2. Select **PianoFall Automated Render Pipeline** from the left sidebar.
-3. Click **Run workflow**. You can optionally specify a test duration (e.g., `15` seconds) for a fast trial.
-4. When finished, your video will be automatically committed to `outputs/YYYY-MM-DD/`.
-
----
-
 ## 📜 Technical Architecture
 
 For an in-depth explanation of the two-stage rendering strategy, `setpts` frame retiming, and CPU budget allocation, see [ARCHITECTURE.md](ARCHITECTURE.md).
